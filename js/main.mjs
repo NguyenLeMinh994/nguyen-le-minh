@@ -18,15 +18,20 @@ const getPostListElement = () => document.querySelector('#postsList');
 
 // Xóa bài đăng
 const handleRemoveButtonClick = async (e, postItemElement) => {
-  e.preventDefault();
-
-  const postListElement = getPostListElement();
-  if (confirm('Bạn có muốn xóa bài này không?') && postItemElement && postListElement) {
-    const postId = postItemElement.getAttribute('data-post-id');
-    const responseDel = await postApi.remove(postId);
-    if (utils.isEmptyObject(responseDel)) {
-      postListElement.removeChild(postItemElement);
+  try {
+    const postListElement = getPostListElement();
+    if (confirm('Bạn có muốn xóa bài này không?') && postItemElement && postListElement) {
+      const postId = postItemElement.getAttribute('data-post-id');
+      const responseDel = await postApi.remove(postId);
+      if (utils.isEmptyObject(responseDel)) {
+        postListElement.removeChild(postItemElement);
+      }
     }
+    e.stopPropagation();
+
+  } catch (error) {
+    console.log('Remove post', error);
+
   }
 };
 const handlePassDetailPage = (e, post) => {
@@ -75,24 +80,26 @@ const buildPostItem = (post) => {
 
   }
 
-  // Pass Detail Page
-  const postItem = postItemElement.querySelector('#postItem > .card');
-  if (postItem) {
-    postItemElement.addEventListener('click', (e) => handlePassDetailPage(e, post));
-
-  }
   const postItemRemove = postItemElement.querySelector('#postItemRemove');
-  if (postItemRemove) {
-    postItemRemove.addEventListener('click', (e) => handleRemoveButtonClick(e, postItemElement));
-    postItemRemove.removeAttribute('id');
-  }
+  console.log(postItemRemove);
+  // if (postItemRemove) {
+  //   postItemRemove.addEventListener('click', (e) => handleRemoveButtonClick(e, postItemElement));
+  //   postItemRemove.removeAttribute('id');
+  // }
 
+
+  // Pass Edit Page
   const postItemEdit = postItemElement.querySelector('#postItemEdit');
   if (postItemEdit) {
     postItemEdit.addEventListener('click', (e) => handleEditButtonClick(e));
     postItemEdit.removeAttribute('id');
   }
 
+  // Pass Detail Page
+  const postItem = postItemElement.querySelector('#postItem');
+  if (postItem) {
+    postItemElement.addEventListener('click', (e) => handlePassDetailPage(e, post));
+  }
   return postItemElement;
 
 };
