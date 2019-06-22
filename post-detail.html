@@ -9,9 +9,13 @@
 
   <link rel="shortcut icon" href="images/favicon.png" type="image/png">
 
+
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <!-- Light Box -->
+  <link rel="stylesheet" href="./lightbox/css/lightbox.min.css" />
 
   <!-- Font awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
@@ -80,14 +84,9 @@
               iusto dolorum rem, non error, saepe quia dignissimos quas ducimus aliquid. Praesentium ea aspernatur vero
               deserunt.
             </p>
-
-            <img class="post-image" src="https://picsum.photos/1368/800" alt="Picsum photos">
-
-            <p>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Adipisci suscipit inventore hic tenetur, dolor
-              iusto dolorum rem, non error, saepe quia dignissimos quas ducimus aliquid. Praesentium ea aspernatur vero
-              deserunt.
-            </p>
+            <a href="https://picsum.photos/1368/800" data-lightbox="image-1" data-title="Picsum photos">
+              <img class="post-image" src="https://picsum.photos/1368/800" alt="Picsum photos">
+            </a>
 
             <p>
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Adipisci suscipit inventore hic tenetur, dolor
@@ -101,7 +100,15 @@
               deserunt.
             </p>
 
-            <img class="post-image" src="https://picsum.photos/1368/1000" alt="Picsum photos">
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Adipisci suscipit inventore hic tenetur, dolor
+              iusto dolorum rem, non error, saepe quia dignissimos quas ducimus aliquid. Praesentium ea aspernatur vero
+              deserunt.
+            </p>
+
+            <a href="https://picsum.photos/1368/1000" data-lightbox="image-2" data-title="Picsum photos">
+              <img class="post-image" src="https://picsum.photos/1368/1000" alt="Picsum photos">
+            </a>
 
             <p>
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Adipisci suscipit inventore hic tenetur, dolor
@@ -117,7 +124,7 @@
   <footer class="text-center text-muted py-3">
     <small>Created by Po with <i class="fas fa-heart"></i></small>
   </footer>
-
+  <script src="./lightbox/js/lightbox-plus-jquery.min.js"></script>
 
   <!-- Scripts should be placed here to prevent blocking render UI -->
   <script type="module" src="js/post-detail.mjs"></script>

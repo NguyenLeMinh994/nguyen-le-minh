@@ -1,4 +1,3 @@
-
 .posts-section {
   padding: 3rem 0;
 }
@@ -9,7 +8,7 @@
 
 /* Add box shadow on card hover */
 .posts-section .post-item:hover {
-  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
   cursor: pointer;
 }
 
@@ -17,11 +16,13 @@
 .posts-section .post-item {
   overflow: hidden;
 }
+
 .posts-section .post-item .card-img-top {
   height: 200px;
   width: auto;
   transition: all .5s;
 }
+
 .posts-section .post-item:hover .card-img-top {
   transform: scale(1.1);
 }

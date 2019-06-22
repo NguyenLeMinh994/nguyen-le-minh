@@ -81,11 +81,11 @@ const buildPostItem = (post) => {
   }
 
   const postItemRemove = postItemElement.querySelector('#postItemRemove');
-  console.log(postItemRemove);
-  // if (postItemRemove) {
-  //   postItemRemove.addEventListener('click', (e) => handleRemoveButtonClick(e, postItemElement));
-  //   postItemRemove.removeAttribute('id');
-  // }
+  // console.log(postItemRemove);
+  if (postItemRemove) {
+    postItemRemove.addEventListener('click', (e) => handleRemoveButtonClick(e, postItemElement));
+    postItemRemove.removeAttribute('id');
+  }
 
 
   // Pass Edit Page
