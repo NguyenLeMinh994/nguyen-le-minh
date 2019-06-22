@@ -4,7 +4,7 @@ const truncateTextlength = (text, length) => {
   if (length < 0 || !text) return '';
 
   const truncatedText = text.length > length
-    ? `${text.substring(0, length - 3)}...`
+    ? `${ text.substring(0, length - 3) }...`
     : text;
 
   return truncatedText;
@@ -17,11 +17,11 @@ const formatDate = (dateString) => {
   const date = new Date(dateString);
   const hour = date.getHours();
   const minute = date.getMinutes();
-  const day = `0${date.getDate()}`.slice(-2);
-  const month = `0${date.getMonth() + 1}`.slice(-2);
+  const day = `0${ date.getDate() }`.slice(-2);
+  const month = `0${ date.getMonth() + 1 }`.slice(-2);
   const year = date.getFullYear();
 
-  return `${hour}:${minute} ${day}/${month}/${year}`;
+  return `${ hour }:${ minute } ${ day }/${ month }/${ year }`;
 };
 
 const setTextByElementId = (elementId, text) => {
@@ -48,7 +48,7 @@ const getValueByElementId = (elementId) => {
 const setBackgroundImageByElementId = (elementId, imageUrl) => {
   const element = document.getElementById(elementId);
   if (element) {
-    element.style.backgroundImage = `url(${imageUrl || AppConstants.DEFAULT_IMAGE_URL})`;
+    element.style.backgroundImage = `url(${ imageUrl || AppConstants.DEFAULT_IMAGE_URL })`;
   }
 }
 
@@ -75,7 +75,15 @@ const removeClassByElementId = (elementId, classList) => {
     element.classList.remove(...classList);
   }
 };
+const isEmptyObject = (obj) => {
+  return Object.getOwnPropertyNames(obj).length === 0; //true
+}
 
+const getHost = () => {
+  const url = new URL(document.location.href);
+  return `${ url.protocol }//${ url.host }`;
+
+}
 const utils = {
   truncateTextlength,
   formatDate,
@@ -86,5 +94,7 @@ const utils = {
   getBackgroundImageByElementId,
   addClassByElementId,
   removeClassByElementId,
+  isEmptyObject,
+  getHost,
 };
 export default utils;
