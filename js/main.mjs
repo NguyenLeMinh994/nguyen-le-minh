@@ -8,11 +8,8 @@ import AppConstants from "./appConstants.js";
 const getPostListElement = () => document.querySelector('#postsList');
 
 //-----Learning------
-//
 
 // async function abc(){}
-
-
 
 //-----Learning------
 
@@ -22,8 +19,7 @@ const handleRemoveButtonClick = async (e, postItemElement) => {
   e.preventDefault();
 
   try {
-    const postListElement = getPostListElement();
-    if (window.confirm('Bạn có muốn xóa bài này không?') && postItemElement && postListElement) {
+    if (window.confirm('Bạn có muốn xóa bài này không?') && postItemElement) {
       const postId = postItemElement.getAttribute('data-post-id');
       const responseDel = await postApi.remove(postId);
       if (utils.isEmptyObject(responseDel)) {
@@ -45,6 +41,7 @@ const handlePassDetailPage = (e, post) => {
 };
 // Cập nhật bài đăng
 const handleEditButtonClick = (e) => {
+  e.stopPropagation();
   e.preventDefault();
 
 };

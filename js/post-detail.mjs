@@ -6,12 +6,23 @@ import utils from "./utils.js";
 
 // get post of data from server
 const getPostDataFromServer = () => {
-    const url = new URL(document.location.href);
-    const search = url.searchParams;
+    const search = new URLSearchParams(window.location.search);
     const postId = search.get('postId');
-
+    if (!search.has('postId') || !postId) {
+        return -1;
+    }
     return postApi.getDetail(postId);
+
+
 };
+const renderEditLink = (post) => {
+    const goToEditPageLink = document.querySelector('#goToEditPageLink');
+
+    if (goToEditPageLink) {
+        goToEditPageLink.href = `${ utils.getHost() }/add-edit-post.html?postId=${ post.id }`;
+        goToEditPageLink.innerHTML = '<i class="fas fa-edit"></i>Edit post';
+    }
+}
 
 // render post data
 const renderPost = (post) => {
@@ -39,12 +50,18 @@ const renderPost = (post) => {
 
 
 const init = async () => {
-    const postData = await getPostDataFromServer();
-    console.log(postData);
+    try {
+        const postData = await getPostDataFromServer();
+        if (postData == -1) return;
 
-    renderPost(postData);
+        renderPost(postData);
+
+        renderEditLink(postData);
+    } catch (error) {
+        console.log('Warning! ', error)
+    }
+
 
 };
-
 
 init();

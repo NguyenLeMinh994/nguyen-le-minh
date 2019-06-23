@@ -16,7 +16,7 @@ const request = async (url, options) => {
         const response = await fetch(url, requestOptions);
         if (response.status >= 200 && response.status < 300) {
             const data = await response.json();// return promise
-            return data
+            return data;
         }
 
         // Way 1
