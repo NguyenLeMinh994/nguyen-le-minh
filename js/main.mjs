@@ -18,21 +18,24 @@ const getPostListElement = () => document.querySelector('#postsList');
 
 // Xóa bài đăng
 const handleRemoveButtonClick = async (e, postItemElement) => {
+  e.stopPropagation();
+  e.preventDefault();
+
   try {
     const postListElement = getPostListElement();
-    if (confirm('Bạn có muốn xóa bài này không?') && postItemElement && postListElement) {
+    if (window.confirm('Bạn có muốn xóa bài này không?') && postItemElement && postListElement) {
       const postId = postItemElement.getAttribute('data-post-id');
       const responseDel = await postApi.remove(postId);
       if (utils.isEmptyObject(responseDel)) {
-        postListElement.removeChild(postItemElement);
+        document.location.reload();
       }
     }
-    e.stopPropagation();
 
   } catch (error) {
     console.log('Remove post', error);
 
   }
+
 };
 const handlePassDetailPage = (e, post) => {
   e.preventDefault();
@@ -82,9 +85,9 @@ const buildPostItem = (post) => {
 
   const postItemRemove = postItemElement.querySelector('#postItemRemove');
   // console.log(postItemRemove);
+  //error
   if (postItemRemove) {
     postItemRemove.addEventListener('click', (e) => handleRemoveButtonClick(e, postItemElement));
-    postItemRemove.removeAttribute('id');
   }
 
 
@@ -92,13 +95,12 @@ const buildPostItem = (post) => {
   const postItemEdit = postItemElement.querySelector('#postItemEdit');
   if (postItemEdit) {
     postItemEdit.addEventListener('click', (e) => handleEditButtonClick(e));
-    postItemEdit.removeAttribute('id');
   }
 
   // Pass Detail Page
   const postItem = postItemElement.querySelector('#postItem');
   if (postItem) {
-    postItemElement.addEventListener('click', (e) => handlePassDetailPage(e, post));
+    postItem.addEventListener('click', (e) => handlePassDetailPage(e, post));
   }
   return postItemElement;
 
@@ -111,7 +113,9 @@ const renderPostList = (postList) => {
 
     for (const post of postList) {
       const postItemElement = buildPostItem(post);
-      postListElement.appendChild(postItemElement);
+      if (postItemElement) {
+        postListElement.appendChild(postItemElement);
+      }
     }
 
   }
