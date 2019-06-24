@@ -10,7 +10,7 @@ const renderDetailLink = (post) => {
     const goToDetailPageLink = document.querySelector('#goToDetailPageLink');
 
     if (goToDetailPageLink && post) {
-        goToDetailPageLink.href = `${ utils.getHost() }/post-detail.html?postId=${ post.id }`;
+        goToDetailPageLink.href = `post-detail.html?postId=${ post.id }`;
         goToDetailPageLink.innerHTML = '<i class="fas fa-eye mr-1"></i>View detail';
     }
 };
@@ -76,7 +76,7 @@ const handleSubmitForm = async (e, postForm, post) => {
             const postDataApi = await postApi.add(formValue);
             if (!utils.isEmptyObject(postDataApi)) {
                 alert('Save post successfully');
-
+                window.location.href = `add-edit-post.html?postId=${ postDataApi.id }`;
             }
 
 
