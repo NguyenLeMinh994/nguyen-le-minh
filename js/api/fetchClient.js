@@ -42,7 +42,7 @@ const get = (url, params) => request(url, { method: 'GET' });
 
 const post = (url, body) => request(url, { body: JSON.stringify(body), method: 'POST' });
 
-const patch = (url, body) => request(url, { body: JSON.stringify(body), method: 'PATH' });
+const patch = (url, body) => request(url, { body: JSON.stringify(body), method: 'PATCH' });
 
 const deleteRequest = (url) => request(url, { method: 'DELETE' });
 

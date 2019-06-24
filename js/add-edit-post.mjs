@@ -9,7 +9,7 @@ import postApi from "./api/postApi.js";
 const renderDetailLink = (post) => {
     const goToDetailPageLink = document.querySelector('#goToDetailPageLink');
 
-    if (goToDetailPageLink) {
+    if (goToDetailPageLink && post) {
         goToDetailPageLink.href = `${ utils.getHost() }/post-detail.html?postId=${ post.id }`;
         goToDetailPageLink.innerHTML = '<i class="fas fa-eye mr-1"></i>View detail';
     }
@@ -31,8 +31,67 @@ const buildEditElement = (post) => {
     utils.setBackgroundImageByElementId('postHeroImage', post.imageUrl)
 };
 
-const renderEdit = (post) => {
-    buildEditElement(post);
+const handleSubmitForm = async (e, postForm, post) => {
+    e.preventDefault();
+    const formValue = {};
+    const formControlNameList = ['title', 'author', 'description'];
+
+    if (!utils.isEmptyObject(post)) {
+
+        if (postForm) {
+
+            for (const controlName of formControlNameList) {
+                const control = postForm.querySelector(`[name=${ controlName }]`);
+                if (control.value !== post[controlName]) {
+                    formValue[controlName] = control.value;
+                }
+            }
+            const imageUrl = utils.getBackgroundImageByElementId('postHeroImage');
+            if (imageUrl !== post.imageUrl) {
+                formValue['imageUrl'] = imageUrl;
+            }
+        }
+
+        if (!utils.isEmptyObject(formValue)) {
+            formValue['id'] = post.id;
+
+            await postApi.update(formValue);
+
+        } else {
+            console.error('Ko có thay đổi');
+
+        }
+        alert('Save post successfully');
+
+
+    } else
+        if (utils.isEmptyObject(post)) {
+
+            for (const controlName of formControlNameList) {
+                const control = postForm.querySelector(`[name=${ controlName }]`);
+                formValue[controlName] = control.value;
+            }
+            const imageUrl = utils.getBackgroundImageByElementId('postHeroImage');
+            formValue['imageUrl'] = imageUrl;
+            const postDataApi = await postApi.add(formValue);
+            if (!utils.isEmptyObject(postDataApi)) {
+                alert('Save post successfully');
+
+            }
+
+
+        }
+};
+
+const renderAddEditPost = (post = {}) => {
+    if (!utils.isEmptyObject(post)) {
+        buildEditElement(post);
+
+    }
+    const postForm = document.querySelector('#postForm');
+    if (postForm) {
+        postForm.addEventListener('submit', (e) => handleSubmitForm(e, postForm, post));
+    }
 };
 const createRandomIdImage = (min, max) => {
     return Math.trunc(Math.random() * (max - min) + min);
@@ -40,6 +99,8 @@ const createRandomIdImage = (min, max) => {
 const changePostImage = () => {
     // console.log('Heloo');
     const randomImage = createRandomIdImage(100, 1000);
+    console.log(randomImage);
+
     const imageUrl = `https://picsum.photos/id/${ randomImage }/1368/400`;
     utils.setBackgroundImageByElementId('postHeroImage', imageUrl)
 
@@ -52,17 +113,23 @@ const renderPostEditPage = async () => {
 
     switch (mode) {
         case 'edit':
+            console.log('edit');
+
             const postData = await getPostDataFromServer(postId);
             console.log(postData);
-
             renderDetailLink(postData)
-            renderEdit(postData);
+
+            renderAddEditPost(postData);
 
             break;
         case 'add':
+            console.log('add');
+            changePostImage();
+            renderAddEditPost();
 
             break;
-        default:
+        default: console.console.error('Lỗi rồi!');
+
             break;
     }
     const postChangeImageElement = document.querySelector('#postChangeImage');
