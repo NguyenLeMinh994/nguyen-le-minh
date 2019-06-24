@@ -8,7 +8,7 @@ export default class BaseApi {
     }
 
     getAll() {
-        const url = `${ AppConstants.API_URL }/${ this.getResourceName() }`;
+        const url = `${ AppConstants.API_URL }/${ this.getResourceName() }?_sort=updatedAt&_order=desc`;
         return fetchClient.get(url);
     }
 

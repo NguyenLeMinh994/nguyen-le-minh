@@ -40,9 +40,11 @@ const handlePassDetailPage = (e, post) => {
 
 };
 // Cập nhật bài đăng
-const handleEditButtonClick = (e) => {
+const handleEditButtonClick = (e, post) => {
   e.stopPropagation();
   e.preventDefault();
+  document.location.href = `${ utils.getHost() }/add-edit-post.html?postId=${ post.id }`;
+
 
 };
 
@@ -91,7 +93,7 @@ const buildPostItem = (post) => {
   // Pass Edit Page
   const postItemEdit = postItemElement.querySelector('#postItemEdit');
   if (postItemEdit) {
-    postItemEdit.addEventListener('click', (e) => handleEditButtonClick(e));
+    postItemEdit.addEventListener('click', (e) => handleEditButtonClick(e, post));
   }
 
   // Pass Detail Page
