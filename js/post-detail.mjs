@@ -19,7 +19,7 @@ const renderEditLink = (post) => {
     const goToEditPageLink = document.querySelector('#goToEditPageLink');
 
     if (goToEditPageLink) {
-        goToEditPageLink.href = `${ utils.getHost() }/add-edit-post.html?postId=${ post.id }`;
+        goToEditPageLink.href = `add-edit-post.html?postId=${ post.id }`;
         goToEditPageLink.innerHTML = '<i class="fas fa-edit"></i>Edit post';
     }
 }
