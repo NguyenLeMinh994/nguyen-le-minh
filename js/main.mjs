@@ -36,14 +36,14 @@ const handleRemoveButtonClick = async (e, postItemElement) => {
 const handlePassDetailPage = (e, post) => {
   e.preventDefault();
   // console.log('Detail Page', 'OK nhe');
-  document.location.href = `post-detail.html?postId=${ post.id }`;
+  document.location.href = `./post-detail.html?postId=${ post.id }`;
 
 };
 // Cập nhật bài đăng
 const handleEditButtonClick = (e, post) => {
   e.stopPropagation();
   e.preventDefault();
-  document.location.href = `add-edit-post.html?postId=${ post.id }`;
+  document.location.href = `./add-edit-post.html?postId=${ post.id }`;
 
 
 };
