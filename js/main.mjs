@@ -125,21 +125,34 @@ const renderPagination = async () => {
   const page = parseInt(search.get('_page'));
   const limit = parseInt(search.get('_limit'));
   const postsPaginationElement = document.querySelectorAll('#postsPagination > li');
+
   const liFirstElement = postsPaginationElement[0];
   const liSecondElement = postsPaginationElement[1];
 
+  const nextPage = liSecondElement.querySelector('a');
+  const prePage = liFirstElement.querySelector('a');
+
+
   const params = {
-    page: AppConstants.DEFAULT_PAGE,
-    limit: AppConstants.DEFAULT_LIMIT
+    page: !page ? AppConstants.DEFAULT_PAGE : page,
+    limit: !limit ? AppConstants.DEFAULT_LIMIT : limit
   };
+  const postList = await postApi.getPagination(params);
+
+  const { pagination, data } = postList;
+  const totalPage = Math.ceil(pagination._totalRows / pagination._limit);
+  renderPostList(data);
+
 
   if (page === 1 || !search.has('_page')) {
     if (liFirstElement) {
       console.log('page la 1');
 
       liFirstElement.classList.add('disabled');
-      const aSecondElement = liSecondElement.querySelector('a');
-      aSecondElement.href = `index.html?_limit=${ params.limit }&_page=${ params.page + 1 }`;
+
+      nextPage.href = `index.html?_limit=${ params.limit }&_page=${ params.page + 1 }`;
+
+
     }
 
   }
@@ -148,43 +161,42 @@ const renderPagination = async () => {
       // console.log('page ko 1');
 
       liFirstElement.classList.remove('disabled');
-      params.page = page;
-      params.limit = limit;
-      const aSecondElement = liSecondElement.querySelector('a');
-      aSecondElement.href = `index.html?_limit=${ params.limit }&_page=${ params.page + 1 }`;
+      if (params.page >= totalPage) {
+        nextPage.href = '#';
+
+      } else {
+        nextPage.href = `index.html?_limit=${ params.limit }&_page=${ params.page + 1 }`;
+
+      }
     }
   }
 
-  const postList = await postApi.getPagination(params);
 
-  const pagination = postList['pagination'];
-  const totalPage = Math.ceil(pagination._totalRows / pagination._limit);
 
   if (page >= totalPage) {
     if (liSecondElement) {
       // console.log('đây là second');
 
       liSecondElement.classList.add('disabled');
-      params.page = page;
-      params.limit = limit;
 
-      const aFirstElement = liFirstElement.querySelector('a');
-      aFirstElement.href = `index.html?_limit=${ params.limit }&_page=${ params.page - 1 }`;
+      prePage.href = `index.html?_limit=${ params.limit }&_page=${ params.page - 1 }`;
     }
   } else {
     if (liSecondElement) {
       liSecondElement.classList.remove('disabled');
-      params.page = !page ? 1 : page;
-      params.limit = !limit ? 6 : limit;
+      if (params.page === 1) {
+        prePage.href = '#';
 
-      // console.log('xx');
-      const aFirstElement = liFirstElement.querySelector('a');
-      aFirstElement.href = `index.html?_limit=${ params.limit }&_page=${ (params.page - 1) !== 0 ? (params.page - 1) : 1 }`;
+      } else {
+        prePage.href = `index.html?_limit=${ params.limit }&_page=${ (params.page - 1) !== 0 ? (params.page - 1) : 1 }`;
+
+      }
+
     }
 
   }
 
-  renderPostList(postList['data']);
+
 }
 // -----------------------
 // MAIN LOGIC
