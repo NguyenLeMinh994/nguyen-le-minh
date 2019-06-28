@@ -120,17 +120,79 @@ const renderPostList = (postList) => {
   }
 };
 
+const renderPagination = async () => {
+  const search = new URLSearchParams(window.location.search);
+  const page = parseInt(search.get('_page'));
+  const limit = parseInt(search.get('_limit'));
+  const postsPaginationElement = document.querySelectorAll('#postsPagination > li');
+  const liFirstElement = postsPaginationElement[0];
+  const liSecondElement = postsPaginationElement[1];
+
+  const params = {
+    page: AppConstants.DEFAULT_PAGE,
+    limit: AppConstants.DEFAULT_LIMIT
+  };
+
+  if (page === 1 || !search.has('_page')) {
+    if (liFirstElement) {
+      console.log('page la 1');
+
+      liFirstElement.classList.add('disabled');
+      const aSecondElement = liSecondElement.querySelector('a');
+      aSecondElement.href = `index.html?_limit=${ params.limit }&_page=${ params.page + 1 }`;
+    }
+
+  }
+  else {
+    if (liFirstElement) {
+      // console.log('page ko 1');
+
+      liFirstElement.classList.remove('disabled');
+      params.page = page;
+      params.limit = limit;
+      const aSecondElement = liSecondElement.querySelector('a');
+      aSecondElement.href = `index.html?_limit=${ params.limit }&_page=${ params.page + 1 }`;
+    }
+  }
+
+  const postList = await postApi.getPagination(params);
+
+  const pagination = postList['pagination'];
+  const totalPage = Math.ceil(pagination._totalRows / pagination._limit);
+
+  if (page >= totalPage) {
+    if (liSecondElement) {
+      // console.log('đây là second');
+
+      liSecondElement.classList.add('disabled');
+      params.page = page;
+      params.limit = limit;
+
+      const aFirstElement = liFirstElement.querySelector('a');
+      aFirstElement.href = `index.html?_limit=${ params.limit }&_page=${ params.page - 1 }`;
+    }
+  } else {
+    if (liSecondElement) {
+      liSecondElement.classList.remove('disabled');
+      params.page = !page ? 1 : page;
+      params.limit = !limit ? 6 : limit;
+
+      // console.log('xx');
+      const aFirstElement = liFirstElement.querySelector('a');
+      aFirstElement.href = `index.html?_limit=${ params.limit }&_page=${ (params.page - 1) !== 0 ? (params.page - 1) : 1 }`;
+    }
+
+  }
+
+  renderPostList(postList['data']);
+}
 // -----------------------
 // MAIN LOGIC
 // -----------------------
 const init = async () => {
   // Write your logic here ....
 
-
-  const postList = await postApi.getAll();
-  // console.log(postList);
-
-  renderPostList(postList);
+  renderPagination();
 };
 
 

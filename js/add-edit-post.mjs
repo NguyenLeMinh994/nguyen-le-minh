@@ -118,7 +118,6 @@ const handleSubmitForm = async (e, postForm, post) => {
                 }
             }
 
-
         }
 };
 
@@ -130,16 +129,15 @@ const renderAddEditPost = (post = {}) => {
         changePostImage();
     }
     const postForm = document.querySelector('#postForm');
+
     if (postForm) {
         postForm.addEventListener('submit', (e) => handleSubmitForm(e, postForm, post));
     }
 };
-const createRandomIdImage = (min, max) => {
-    return Math.trunc(Math.random() * (max - min) + min);
-}
+
 const changePostImage = () => {
     // console.log('Heloo');
-    const randomImage = createRandomIdImage(100, 1000);
+    const randomImage = utils.createRandom(100, 1000);
     console.log(randomImage);
 
     const imageUrl = `https://picsum.photos/id/${ randomImage }/1368/400`;

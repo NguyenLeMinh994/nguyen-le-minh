@@ -84,6 +84,10 @@ const getHost = () => {
   return `${ url.protocol }//${ url.host }`;
 
 }
+
+const createRandom = (min, max) => {
+  return Math.trunc(Math.random() * (max - min) + min);
+}
 const utils = {
   truncateTextlength,
   formatDate,
@@ -96,5 +100,6 @@ const utils = {
   removeClassByElementId,
   isEmptyObject,
   getHost,
+  createRandom
 };
 export default utils;
