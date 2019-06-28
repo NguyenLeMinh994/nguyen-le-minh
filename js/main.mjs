@@ -134,10 +134,14 @@ const renderPagination = async () => {
 
 
   const params = {
-    page: !page ? AppConstants.DEFAULT_PAGE : page,
-    limit: !limit ? AppConstants.DEFAULT_LIMIT : limit
+    _page: !page ? AppConstants.DEFAULT_PAGE : page,
+    _limit: !limit ? AppConstants.DEFAULT_LIMIT : limit,
+    _order: 'desc',
+    _sort: 'updatedAt'
   };
-  const postList = await postApi.getPagination(params);
+
+  const paramsString = new URLSearchParams(params).toString();
+  const postList = await postApi.getPagination(paramsString);
 
   const { pagination, data } = postList;
   const totalPage = Math.ceil(pagination._totalRows / pagination._limit);
@@ -150,7 +154,7 @@ const renderPagination = async () => {
 
       liFirstElement.classList.add('disabled');
 
-      nextPage.href = `index.html?_limit=${ params.limit }&_page=${ params.page + 1 }`;
+      nextPage.href = `index.html?_limit=${ params._limit }&_page=${ params._page + 1 }`;
 
 
     }
@@ -165,7 +169,7 @@ const renderPagination = async () => {
         nextPage.href = '#';
 
       } else {
-        nextPage.href = `index.html?_limit=${ params.limit }&_page=${ params.page + 1 }`;
+        nextPage.href = `index.html?_limit=${ params._limit }&_page=${ params._page + 1 }`;
 
       }
     }
@@ -179,7 +183,7 @@ const renderPagination = async () => {
 
       liSecondElement.classList.add('disabled');
 
-      prePage.href = `index.html?_limit=${ params.limit }&_page=${ params.page - 1 }`;
+      prePage.href = `index.html?_limit=${ params._limit }&_page=${ params._page - 1 }`;
     }
   } else {
     if (liSecondElement) {
@@ -188,7 +192,7 @@ const renderPagination = async () => {
         prePage.href = '#';
 
       } else {
-        prePage.href = `index.html?_limit=${ params.limit }&_page=${ (params.page - 1) !== 0 ? (params.page - 1) : 1 }`;
+        prePage.href = `index.html?_limit=${ params._limit }&_page=${ (params._page - 1) !== 0 ? (params._page - 1) : 1 }`;
 
       }
 

@@ -9,7 +9,7 @@ class PostApi extends BaseApi {
     }
 
     getPagination(params) {
-        const url = `${ AppConstants.API_URL }/${ this.getResourceName() }?_sort=updatedAt&_order=desc&_limit=${ params.limit }&_page=${ params.page }`;
+        const url = `${ AppConstants.API_URL }/${ this.getResourceName() }?${ params }`;
         // const url = `${ AppConstants.API_URL }/${ this.getResourceName() }?_sort=updatedAt&_order=desc&_limit=6&_page=1`;
         // console.log(url);
 
