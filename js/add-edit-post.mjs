@@ -17,7 +17,7 @@ const renderDetailLink = (post) => {
 
 
 
-const buildEditElement = (post) => {
+const renderEditElement = (post) => {
 
     utils.setValueByElementId('postTitle', post.title);
 
@@ -29,19 +29,19 @@ const buildEditElement = (post) => {
 };
 
 const isValidate = () => {
-    let isVal = true;
+    let isValid = true;
     const title = utils.getValueByElementId('postTitle');
     if (!title) {
         utils.addClassByElementId('postTitle', ['is-invalid']);
-        isVal = false;
+        isValid = false;
     }
 
     const author = utils.getValueByElementId('postAuthor');
     if (!author) {
         utils.addClassByElementId('postAuthor', ['is-invalid']);
-        isVal = false;
+        isValid = false;
     }
-    return isVal;
+    return isValid;
 };
 
 const submitEditPost = async (e, postForm, post) => {
@@ -74,7 +74,7 @@ const submitEditPost = async (e, postForm, post) => {
 
                 alert('Save post successfully');
             } else {
-                alert('Save post successfully');
+                alert('No change anything');
             }
 
         } catch (error) {
@@ -85,8 +85,10 @@ const submitEditPost = async (e, postForm, post) => {
 
 };
 
-const renderEditPost = (post) => {
-    buildEditElement(post);
+const buildEditPost = (post) => {
+
+    renderDetailLink(post);
+    renderEditElement(post);
 
     const postForm = postFormElement();
     if (postForm) {
@@ -94,7 +96,7 @@ const renderEditPost = (post) => {
     }
 };
 
-const submitAddPost = (e, postForm) => {
+const submitAddPost = async (e, postForm) => {
     e.preventDefault();
 
     const formValue = {};
@@ -110,7 +112,7 @@ const submitAddPost = (e, postForm) => {
             }
 
             const imageUrl = utils.getBackgroundImageByElementId('postHeroImage');
-            formValue['imageUrl'] = imageUrl;
+            formValue.imageUrl = imageUrl;
             const postDataApi = await postApi.add(formValue);
 
             if (!utils.isEmptyObject(postDataApi)) {
@@ -146,11 +148,12 @@ const renderPostAddOrEditPage = async () => {
     switch (mode) {
         case 'edit':
             console.log('edit');
-
-            const postData = await postApi.get(postId);
-            renderDetailLink(postData)
-
-            renderEditPost(postData);
+            const postData = await postApi.getDetail(postId);
+            if (!postData) {
+                console.log('Can not get post detail');
+                return;
+            }
+            buildEditPost(postData);
 
             break;
         case 'add':
