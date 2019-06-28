@@ -76,7 +76,7 @@ const removeClassByElementId = (elementId, classList) => {
   }
 };
 const isEmptyObject = (obj) => {
-  return Object.getOwnPropertyNames(obj).length === 0; //true
+  return Object.keys(obj).length === 0; //true
 }
 
 const getHost = () => {

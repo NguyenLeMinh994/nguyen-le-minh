@@ -4,6 +4,7 @@ import AppConstants from "./appConstants.js";
 import utils from "./utils.js";
 import postApi from "./api/postApi.js";
 
+const postFormElement = () => document.querySelector('#postForm');
 
 const renderDetailLink = (post) => {
     const goToDetailPageLink = document.querySelector('#goToDetailPageLink');
@@ -14,11 +15,6 @@ const renderDetailLink = (post) => {
     }
 };
 
-const getPostDataFromServer = (postId) => {
-    if (!postId) return;
-    return postApi.getDetail(postId);
-
-};
 
 
 const buildEditElement = (post) => {
@@ -32,7 +28,7 @@ const buildEditElement = (post) => {
     utils.setBackgroundImageByElementId('postHeroImage', post.imageUrl)
 };
 
-const isValidation = () => {
+const isValidate = () => {
     let isVal = true;
     const title = utils.getValueByElementId('postTitle');
     if (!title) {
@@ -48,90 +44,86 @@ const isValidation = () => {
     return isVal;
 };
 
-const handleSubmitForm = async (e, postForm, post) => {
+const submitEditPost = async (e, postForm, post) => {
     e.preventDefault();
+
+    const formValue = {};
+
+    const formControlNameList = ['title', 'author', 'description'];
+    const isValid = isValidate();
+    //edit
+    if (isValid) {
+        try {
+            if (postForm) {
+                for (const controlName of formControlNameList) {
+                    const control = postForm.querySelector(`[name=${ controlName }]`);
+                    if (control.value !== post[controlName]) {
+                        formValue[controlName] = control.value;
+                    }
+                }
+
+                const imageUrl = utils.getBackgroundImageByElementId('postHeroImage');
+                if (imageUrl !== post.imageUrl) {
+                    formValue['imageUrl'] = imageUrl;
+                }
+            }
+
+            if (!utils.isEmptyObject(formValue)) {
+                formValue.id = post.id;
+                await postApi.update(formValue);
+
+                alert('Save post successfully');
+            } else {
+                alert('Save post successfully');
+            }
+
+        } catch (error) {
+            alert('Save post fail');
+
+        }
+    }
+
+};
+
+const renderEditPost = (post) => {
+    buildEditElement(post);
+
+    const postForm = postFormElement();
+    if (postForm) {
+        postForm.addEventListener('submit', (e) => submitEditPost(e, postForm, post));
+    }
+};
+
+const submitAddPost = (e, postForm) => {
+    e.preventDefault();
+
     const formValue = {};
     const formControlNameList = ['title', 'author', 'description'];
-    const isVal = isValidation();
-    if (!utils.isEmptyObject(post)) {
-        //edit
-        if (isVal) {
+    const isValid = isValidate();
 
-            try {
+    if (isValid) {
+        try {
 
-                if (postForm) {
+            for (const controlName of formControlNameList) {
+                const control = postForm.querySelector(`[name=${ controlName }]`);
+                formValue[controlName] = control.value;
+            }
 
-                    for (const controlName of formControlNameList) {
-                        const control = postForm.querySelector(`[name=${ controlName }]`);
-                        if (control.value !== post[controlName]) {
-                            formValue[controlName] = control.value;
-                        }
-                    }
+            const imageUrl = utils.getBackgroundImageByElementId('postHeroImage');
+            formValue['imageUrl'] = imageUrl;
+            const postDataApi = await postApi.add(formValue);
 
-                    const imageUrl = utils.getBackgroundImageByElementId('postHeroImage');
-                    if (imageUrl !== post.imageUrl) {
-                        formValue['imageUrl'] = imageUrl;
-                    }
-                }
-
-                if (!utils.isEmptyObject(formValue)) {
-                    formValue['id'] = post.id;
-                    await postApi.update(formValue);
-                    alert('Save post successfully');
-                } else {
-                    alert('Save post successfully');
-                }
-
-            } catch (error) {
+            if (!utils.isEmptyObject(postDataApi)) {
+                alert('Save post successfully');
+                window.location.href = `add-edit-post.html?postId=${ postDataApi.id }`;
+            } else {
                 alert('Save post fail');
 
             }
-        }
-
-
-
-    } else
-        if (utils.isEmptyObject(post)) {
-            //add
-            if (isVal) {
-                try {
-
-                    for (const controlName of formControlNameList) {
-                        const control = postForm.querySelector(`[name=${ controlName }]`);
-                        formValue[controlName] = control.value;
-                    }
-
-                    const imageUrl = utils.getBackgroundImageByElementId('postHeroImage');
-                    formValue['imageUrl'] = imageUrl;
-                    const postDataApi = await postApi.add(formValue);
-
-                    if (!utils.isEmptyObject(postDataApi)) {
-                        alert('Save post successfully');
-                        window.location.href = `add-edit-post.html?postId=${ postDataApi.id }`;
-                    } else {
-                        alert('Save post fail');
-
-                    }
-                } catch (error) {
-                    alert('Save post fail');
-
-                }
-            }
+        } catch (error) {
+            alert('Save post fail');
 
         }
-};
-
-const renderAddEditPost = (post = {}) => {
-    if (!utils.isEmptyObject(post)) {
-        buildEditElement(post);
-
-    } else {
-        changePostImage();
-    }
-    const postForm = document.querySelector('#postForm');
-
-    if (postForm) {
-        postForm.addEventListener('submit', (e) => handleSubmitForm(e, postForm, post));
     }
 };
 
@@ -145,28 +137,33 @@ const changePostImage = () => {
 
 };
 
-const renderPostEditPage = async () => {
+
+const renderPostAddOrEditPage = async () => {
     const search = new URLSearchParams(window.location.search);
     const postId = search.get('postId');
-    const mode = (search.has('postId') && postId) ? 'edit' : 'add';
+    const mode = postId ? 'edit' : 'add';
 
     switch (mode) {
         case 'edit':
             console.log('edit');
 
-            const postData = await getPostDataFromServer(postId);
-            console.log(postData);
+            const postData = await postApi.get(postId);
             renderDetailLink(postData)
 
-            renderAddEditPost(postData);
+            renderEditPost(postData);
 
             break;
         case 'add':
             console.log('add');
-            renderAddEditPost();
+            changePostImage();
 
+            const postForm = postFormElement();
+            if (postForm) {
+                postForm.addEventListener('submit', (e) => submitAddPost(e, postForm));
+            }
             break;
-        default: console.console.error('Lỗi rồi!');
+        default:
+            console.error('Lỗi rồi!');
 
             break;
     }
@@ -179,7 +176,7 @@ const renderPostEditPage = async () => {
 }
 const init = async () => {
     // Write your logic here ....
-    renderPostEditPage();
+    renderPostAddOrEditPage();
 
 };
 
