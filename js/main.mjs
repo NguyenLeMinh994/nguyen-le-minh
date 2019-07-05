@@ -175,11 +175,8 @@ const renderPagination = async () => {
     }
   }
 
-
-
   if (page >= totalPage) {
     if (liSecondElement) {
-      // console.log('đây là second');
 
       liSecondElement.classList.add('disabled');
 

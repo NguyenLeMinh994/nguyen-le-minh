@@ -144,10 +144,11 @@ const renderPostAddOrEditPage = async () => {
     const search = new URLSearchParams(window.location.search);
     const postId = search.get('postId');
     const mode = postId ? 'edit' : 'add';
-
+    //  choose option edit or add
     switch (mode) {
         case 'edit':
-            console.log('edit');
+            // console.log('edit');
+
             const postData = await postApi.getDetail(postId);
             if (!postData) {
                 console.log('Can not get post detail');
@@ -157,7 +158,7 @@ const renderPostAddOrEditPage = async () => {
 
             break;
         case 'add':
-            console.log('add');
+            // console.log('add');
             changePostImage();
 
             const postForm = postFormElement();

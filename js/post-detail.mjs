@@ -5,10 +5,10 @@ import utils from "./utils.js";
 
 
 // get post of data from server
-const getPostDataFromServer = () => {
+const getPost = () => {
     const search = new URLSearchParams(window.location.search);
     const postId = search.get('postId');
-    if (!search.has('postId') || !postId) {
+    if (!postId) {
         return -1;
     }
     return postApi.getDetail(postId);
@@ -51,7 +51,7 @@ const renderPost = (post) => {
 
 const init = async () => {
     try {
-        const postData = await getPostDataFromServer();
+        const postData = await getPost();
         if (postData == -1) return;
 
         renderPost(postData);
